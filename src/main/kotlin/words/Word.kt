@@ -16,18 +16,16 @@ class Word(actualWord: String) {
         }
     }
 
-    internal val variationPatterns: List<String> get() = List(wordChars.size) { i ->
+    val variationPatterns: List<String> get() = List(wordChars.size) { i ->
         val chars = wordChars.clone()
         chars[i] = VARIATION_CHAR
         String(chars)
     }
 
     fun addLinkedWords(variants: List<Word>) {
-        linked.addAll(
-            variants.stream()
-                .filter { word -> this != word }
-                .toList()
-        )
+        variants.forEach { word -> if (word != this) {
+            linked.add(word)
+        }}
     }
 
     val length: Int get() = actualWord.length

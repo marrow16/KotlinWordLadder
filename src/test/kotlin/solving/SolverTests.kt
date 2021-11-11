@@ -68,14 +68,14 @@ class SolverTests {
         var solver = Solver(puzzle, options)
         var solutions = solver.solve()
         assertEquals(7, solutions.size)
-        val explored = solver.getExploredCount()
+        val explored = solver.exploredCount
 
         // now do it the other way around..
         puzzle = Puzzle(dictionary["warm"]!!, dictionary["cold"]!!)
         solver = Solver(puzzle, options)
         solutions = solver.solve()
         assertEquals(7, solutions.size)
-        assertEquals(explored, solver.getExploredCount())
+        assertEquals(explored, solver.exploredCount)
     }
 
     @Test
@@ -124,7 +124,7 @@ class SolverTests {
         val solver = Solver(puzzle, options)
         val solutions = solver.solve()
         assertEquals(1, solutions.size)
-        assertEquals(0, solver.getExploredCount())
+        assertEquals(0, solver.exploredCount)
     }
 
     @Test
@@ -135,7 +135,7 @@ class SolverTests {
         val solver = Solver(puzzle, options)
         val solutions = solver.solve()
         assertEquals(1, solutions.size)
-        assertEquals(0, solver.getExploredCount())
+        assertEquals(0, solver.exploredCount)
     }
 
     @Test
@@ -146,7 +146,7 @@ class SolverTests {
         val solver = Solver(puzzle, options)
         val solutions = solver.solve()
         assertEquals(2, solutions.size)
-        assertEquals(0, solver.getExploredCount())
+        assertEquals(0, solver.exploredCount)
     }
 
     @Test
@@ -179,7 +179,7 @@ class SolverTests {
         val solver = Solver(puzzle, options)
         val solutions = solver.solve()
         assertEquals(0, solutions.size)
-        assertEquals(0, solver.getExploredCount())
+        assertEquals(0, solver.exploredCount)
     }
 
     @Test
@@ -190,7 +190,7 @@ class SolverTests {
         val solver = Solver(puzzle, options)
         val solutions = solver.solve()
         assertEquals(3, solutions.size)
-        assertEquals(0, solver.getExploredCount())
+        assertEquals(0, solver.exploredCount)
 
         assertEquals(2, solutions[0].size)
         assertEquals(3, solutions[1].size)

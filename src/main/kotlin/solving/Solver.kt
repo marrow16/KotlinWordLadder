@@ -6,7 +6,7 @@ import java.util.*
 import java.util.concurrent.atomic.AtomicLong
 
 class Solver(private val puzzle: Puzzle, private val options: Options) {
-    private val exploredCount = AtomicLong()
+    private val explored = AtomicLong()
     private val solutions: MutableList<Solution> = ArrayList()
     private var beginWord: Word = puzzle.startWord
     private var endWord: Word = puzzle.finalWord
@@ -16,7 +16,7 @@ class Solver(private val puzzle: Puzzle, private val options: Options) {
     private var endDistances: WordDistanceMap? = null
 
     fun solve(): List<Solution> {
-        exploredCount.set(0)
+        explored.set(0)
         solutions.clear()
         maximumLadderLength = options.maximumLadderLength
         if (maximumLadderLength < 1) {
@@ -98,13 +98,11 @@ class Solver(private val puzzle: Puzzle, private val options: Options) {
     }
 
     @Synchronized
-    internal fun incrementExplored() {
-        exploredCount.incrementAndGet()
+    fun incrementExplored() {
+        explored.incrementAndGet()
     }
 
-    fun getExploredCount(): Long {
-        return exploredCount.get()
-    }
+    val exploredCount: Long get() = explored.get()
 
     fun calculateMinimumLadderLength(): Int? {
         var start: Word = puzzle.startWord
