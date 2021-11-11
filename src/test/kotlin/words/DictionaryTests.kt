@@ -1,6 +1,6 @@
 package words
 
-import exceptions.NoResourceForDictionaryException
+import exceptions.DictionaryLoadErrorException
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
@@ -36,14 +36,14 @@ class DictionaryTests {
     @Test
     fun invalidLengthDictionaryFailsToLoad() {
         assertThrows(
-            NoResourceForDictionaryException::class.java,
+            DictionaryLoadErrorException::class.java,
             { Dictionary(VALID_DICTIONARY_LENGTHS[0] - 1) })
     }
 
     @Test
     fun invalidLengthDictionaryFailsToLoad2() {
         assertThrows(
-            NoResourceForDictionaryException::class.java,
+            DictionaryLoadErrorException::class.java,
             { Dictionary(VALID_DICTIONARY_LENGTHS[VALID_DICTIONARY_LENGTHS.size - 1] + 1) })
     }
 

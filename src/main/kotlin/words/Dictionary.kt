@@ -2,11 +2,12 @@ package words
 
 import exceptions.BadWordException
 import exceptions.DictionaryLoadErrorException
-import exceptions.NoResourceForDictionaryException
-import java.nio.file.Files
-import java.nio.file.Paths
+import java.io.BufferedReader
+import java.io.InputStream
+import java.io.InputStreamReader
 import java.util.function.Consumer
 
+private const val RESOURCE_NAME_PREFIX = "/dictionary-"
 private const val RESOURCE_NAME_SUFFIX = "-letter-words.txt"
 
 class Dictionary(private var wordLength: Int) {
@@ -21,8 +22,7 @@ class Dictionary(private var wordLength: Int) {
         if (word.isNotEmpty()) {
             if (word.length != wordLength) {
                 throw BadWordException(
-                    "Word '" + word + "' (length = "
-                            + word.length + ") cannot be loaded into " + wordLength + " letter word dictionary"
+                    "Word '$word' (length = ${word.length}) cannot be loaded into $wordLength letter word dictionary"
                 )
             }
             val upperWord = word.uppercase()
@@ -50,15 +50,15 @@ class Dictionary(private var wordLength: Int) {
     }
 
     private fun loadWordsFromResources() {
-        val resource =
-            Dictionary::class.java.getResource(wordLength.toString() + RESOURCE_NAME_SUFFIX)
-                ?: throw NoResourceForDictionaryException(
-                    "Dictionary resource for word length "
-                            + wordLength + " does not exist"
-                )
         try {
-            Files.lines(Paths.get(resource.toURI()))
-                .forEach { word: String -> this.addWord(word) }
+            this::class.java.getResourceAsStream("$RESOURCE_NAME_PREFIX$wordLength$RESOURCE_NAME_SUFFIX").use { inputStream: InputStream? ->
+                BufferedReader(InputStreamReader(inputStream!!)).use { br: BufferedReader ->
+                    var line: String?
+                    while (br.readLine().also { line = it } != null) {
+                        this.addWord(line?:"")
+                    }
+                }
+            }
         } catch (e: Exception) {
             throw DictionaryLoadErrorException("Error loading $wordLength letter word dictionary")
         }

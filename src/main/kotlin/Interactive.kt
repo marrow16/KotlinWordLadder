@@ -71,7 +71,7 @@ class Interactive(args: Array<String>) {
                 println(red("Cannot solve '$startWord' to '$finalWord'"))
                 return
             }
-            println(TOOK + green(tookMs(took)) + " to determine minimum ladder length of " + green(maximumLadderLength!!))
+            println("$TOOK${green(tookMs(took))} to determine minimum ladder length of ${green(maximumLadderLength!!)}")
             options.maximumLadderLength = maximumLadderLength!!
         }
         options.maximumLadderLength = maximumLadderLength!!
@@ -79,12 +79,9 @@ class Interactive(args: Array<String>) {
         val solutions = solver.solve()
         val took: Double = System.nanoTime().minus(startTime)
         if (solutions.isEmpty()) {
-            println(red(TOOK + tookMs(took)
-                    + " to find no solutions (explored " + FORMAT_COUNT.format(solver.getExploredCount()) + " solutions)"))
+            println(red("$TOOK${tookMs(took)} to find no solutions (explored ${FORMAT_COUNT.format(solver.exploredCount)} solutions)"))
         } else {
-            println(TOOK + green(tookMs(took))
-                    + " to find " + green(FORMAT_COUNT.format(solutions.size)) + " solutions"
-                    + " (explored " + green(FORMAT_COUNT.format(solver.getExploredCount())) + " solutions)" )
+            println("$TOOK${green(tookMs(took))} to find ${green(FORMAT_COUNT.format(solutions.size))} solutions (explored ${green(FORMAT_COUNT.format(solver.exploredCount))} solutions)")
             displaySolutions(solutions)
         }
     }
@@ -93,8 +90,7 @@ class Interactive(args: Array<String>) {
         val sortedSolutions = solutions.sorted()
         val pageStart = AtomicLong(0)
         while (pageStart.get() < sortedSolutions.size) {
-            print(PROMPT + "List" + (if (pageStart.get() == 0L) "" else " more")
-                    + " solutions? (Enter 'n' for no, 'y' or return for next 10, 'all' for all or how many): ")
+            print("${PROMPT}List${if (pageStart.get() == 0L) "" else " more"} solutions? (Enter 'n' for no, 'y' or return for next 10, 'all' for all or how many): ")
             val input: String = readLine()?: ""
             if (("n" == input)) {
                 break
@@ -112,8 +108,8 @@ class Interactive(args: Array<String>) {
             sortedSolutions.stream()
                 .skip(pageStart.get())
                 .limit(limit)
-                .forEach { solution: Solution -> println("  " + pageStart.incrementAndGet()
-                        + "/" + sortedSolutions.size + "  " + green(solution))
+                .forEach { solution: Solution -> println(
+                    "  ${pageStart.incrementAndGet()}/${sortedSolutions.size}  ${green(solution)}")
                 }
         }
     }
