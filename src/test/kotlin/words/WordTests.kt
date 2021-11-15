@@ -15,8 +15,8 @@ class WordTests {
     @Test
     fun failsToCreateWordWithReservedChar() {
         assertThrows(
-            BadWordException::class.java,
-            Executable { Word("c_t") })
+            BadWordException::class.java
+        ) { Word("c_t") }
     }
 
     @Test

@@ -1,4 +1,5 @@
 import exceptions.PuzzleErrorException
+import solving.WordDistanceMap
 import words.Word
 
 class Puzzle(startWord: Word, finalWord: Word) {
@@ -17,4 +18,28 @@ class Puzzle(startWord: Word, finalWord: Word) {
         this.startWord = startWord
         this.finalWord = finalWord
     }
+
+    fun calculateMinimumLadderLength(): Int? {
+        var start: Word = startWord
+        var end: Word = finalWord
+        // check for short-circuits...
+        when (val differences: Int = start.differences(end)) {
+            0, 1 -> return differences + 1
+            2 -> {
+                val startLinkedWords: MutableSet<Word> = HashSet(start.linkedWords)
+                startLinkedWords.retainAll(end.linkedWords)
+                if (startLinkedWords.isNotEmpty()) {
+                    return 3
+                }
+            }
+        }
+        if (start.linkedWords.size > end.linkedWords.size) {
+            // swap start and end word...
+            end = startWord
+            start = finalWord
+        }
+        return WordDistanceMap(start)[end]
+    }
+
+    fun isSolvable(): Boolean = calculateMinimumLadderLength() != null
 }

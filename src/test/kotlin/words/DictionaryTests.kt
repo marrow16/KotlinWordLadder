@@ -36,15 +36,15 @@ class DictionaryTests {
     @Test
     fun invalidLengthDictionaryFailsToLoad() {
         assertThrows(
-            DictionaryLoadErrorException::class.java,
-            { Dictionary(VALID_DICTIONARY_LENGTHS[0] - 1) })
+            DictionaryLoadErrorException::class.java
+        ) { Dictionary(VALID_DICTIONARY_LENGTHS[0] - 1) }
     }
 
     @Test
     fun invalidLengthDictionaryFailsToLoad2() {
         assertThrows(
-            DictionaryLoadErrorException::class.java,
-            { Dictionary(VALID_DICTIONARY_LENGTHS[VALID_DICTIONARY_LENGTHS.size - 1] + 1) })
+            DictionaryLoadErrorException::class.java
+        ) { Dictionary(VALID_DICTIONARY_LENGTHS[VALID_DICTIONARY_LENGTHS.size - 1] + 1) }
     }
 
     @Test

@@ -41,4 +41,6 @@ class WordDistanceMap(word: Word) {
         return (distance != -1
                 && distance + existingSize <= maximumLadderLength)
     }
+
+
 }
