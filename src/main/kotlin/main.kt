@@ -1,6 +1,4 @@
-import solving.Options
 import solving.Solver
-import solving.WordDistanceMap
 import words.Dictionary
 import kotlin.system.exitProcess
 
@@ -22,11 +20,12 @@ private fun solve(args: Array<String>) {
         val loadStartTime = System.nanoTime()
         val dictionary = Dictionary.Factory.fromWord(first)
         val loadEndTime = System.nanoTime()
-        val firstWord = dictionary[first] ?: throw Exception("Word '$first' does not exist in dictionary")
-        val secondWord = dictionary[second] ?: throw Exception("Word '$second' does not exist in dictionary")
+        val startWord = dictionary[first] ?: throw Exception("Word '$first' does not exist in dictionary")
+        val endWord = dictionary[second] ?: throw Exception("Word '$second' does not exist in dictionary")
+        val puzzle = Puzzle(startWord, endWord)
         val loadTime: Double = loadEndTime.toDouble() - loadStartTime
         println("Took ${FORMAT_MILLIS.format(loadTime / 1000000)}ms to load dictionary")
-        var maxLadderLength: Int = -1
+        val maxLadderLength: Int
         if (args.size >= 3) {
             maxLadderLength = Integer.parseInt(args[2])
             if (maxLadderLength < 1 || maxLadderLength > 20) {
@@ -34,16 +33,15 @@ private fun solve(args: Array<String>) {
             }
         } else {
             val calcStartTime = System.nanoTime()
-            val distanceMap = WordDistanceMap(firstWord)
-            maxLadderLength = distanceMap[secondWord]
-                ?: throw Exception("Cannot solve '$firstWord` to `$secondWord'")
+            maxLadderLength = puzzle.calculateMinimumLadderLength()
+                ?: throw Exception("Cannot solve '$startWord` to `$endWord'")
             val calcEndTime = System.nanoTime()
             val calcTime: Double = calcEndTime.toDouble() - calcStartTime
             println("Took ${FORMAT_MILLIS.format(calcTime / 1000000)}ms to determine minimum ladder length of $maxLadderLength")
         }
-        val solver = Solver(Puzzle(firstWord, secondWord), Options(maxLadderLength))
+        val solver = Solver(puzzle)
         val solveStartTime = System.nanoTime()
-        val solutions = solver.solve()
+        val solutions = solver.solve(maxLadderLength)
         val solveEndTime = System.nanoTime()
         val solveTime: Double = solveEndTime.toDouble() - solveStartTime
         println(

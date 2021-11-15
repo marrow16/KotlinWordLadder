@@ -11,11 +11,10 @@ import kotlin.test.assertNull
 class SolverTests {
     @Test
     fun solveCatToDog() {
-        val options = Options(4)
         val dictionary = Dictionary.Factory.forWordLength(3)
         val puzzle = Puzzle(dictionary["cat"]!!, dictionary["dog"]!!)
-        val solver = Solver(puzzle, options)
-        val solutions: List<Solution> = solver.solve()
+        val solver = Solver(puzzle)
+        val solutions: List<Solution> = solver.solve(4)
         assertEquals(4, solutions.size)
         val midWords: MutableMap<Int, MutableSet<String>> = HashMap()
         for (solution in solutions) {
@@ -39,52 +38,28 @@ class SolverTests {
     }
 
     @Test
-    fun minimumLadderForCatToDog() {
-        val options = Options()
-        val dictionary = Dictionary.Factory.forWordLength(3)
-        val puzzle = Puzzle(dictionary["cat"]!!, dictionary["dog"]!!)
-        val solver = Solver(puzzle, options)
-        val minimumLadderLength: Int? = solver.calculateMinimumLadderLength()
-        assertNotNull(minimumLadderLength)
-        assertEquals(4, minimumLadderLength)
-    }
-
-    @Test
-    fun minimumLadderForColdToWarm() {
-        val options = Options()
-        val dictionary = Dictionary.Factory.forWordLength(4)
-        val puzzle = Puzzle(dictionary["cold"]!!, dictionary["warm"]!!)
-        val solver = Solver(puzzle, options)
-        val minimumLadderLength: Int? = solver.calculateMinimumLadderLength()
-        assertNotNull(minimumLadderLength)
-        assertEquals(5, minimumLadderLength)
-    }
-
-    @Test
     fun solveColdToWarmAndWarmToCold() {
-        val options = Options(5)
         val dictionary = Dictionary.Factory.forWordLength(4)
         var puzzle = Puzzle(dictionary["cold"]!!, dictionary["warm"]!!)
-        var solver = Solver(puzzle, options)
-        var solutions = solver.solve()
+        var solver = Solver(puzzle)
+        var solutions = solver.solve(5)
         assertEquals(7, solutions.size)
         val explored = solver.exploredCount
 
         // now do it the other way around..
         puzzle = Puzzle(dictionary["warm"]!!, dictionary["cold"]!!)
-        solver = Solver(puzzle, options)
-        solutions = solver.solve()
+        solver = Solver(puzzle)
+        solutions = solver.solve(5)
         assertEquals(7, solutions.size)
         assertEquals(explored, solver.exploredCount)
     }
 
     @Test
     fun solveKataToJava() {
-        val options = Options(3)
         val dictionary = Dictionary.Factory.forWordLength(4)
         val puzzle = Puzzle(dictionary["kata"]!!, dictionary["java"]!!)
-        val solver = Solver(puzzle, options)
-        val solutions = solver.solve()
+        val solver = Solver(puzzle)
+        val solutions = solver.solve(3)
         assertEquals(1, solutions.size)
         val solution = solutions[0]
         assertEquals("KATA", solution[0].toString())
@@ -93,102 +68,51 @@ class SolverTests {
     }
 
     @Test
-    fun minimumLadderForKataToJava() {
-        val options = Options()
-        val dictionary = Dictionary.Factory.forWordLength(4)
-        val puzzle = Puzzle(dictionary["kata"]!!, dictionary["java"]!!)
-        val solver = Solver(puzzle, options)
-        val minimumLadderLength: Int? = solver.calculateMinimumLadderLength()
-        assertNotNull(minimumLadderLength)
-        assertEquals(3, minimumLadderLength)
-    }
-
-    @Test
-    fun cannotSolveLlamaToArtsy() {
-        val options = Options()
-        val dictionary = Dictionary.Factory.forWordLength(5)
-        val puzzle = Puzzle(dictionary["llama"]!!, dictionary["artsy"]!!)
-        val solver = Solver(puzzle, options)
-        val minimumLadderLength: Int? = solver.calculateMinimumLadderLength()
-        assertNull(minimumLadderLength)
-
-        // do it again using short-cut method
-        assertFalse(solver.isSolvable())
-    }
-
-    @Test
     fun sameWordIsSolvable() {
-        val options = Options()
         val dictionary = Dictionary.Factory.forWordLength(3)
         val puzzle = Puzzle(dictionary["cat"]!!, dictionary["cat"]!!)
-        val solver = Solver(puzzle, options)
-        val solutions = solver.solve()
+        val solver = Solver(puzzle)
+        val solutions = solver.solve(1)
         assertEquals(1, solutions.size)
         assertEquals(0, solver.exploredCount)
     }
 
     @Test
     fun oneLetterDifferenceIsSolvable() {
-        val options = Options(2)
         val dictionary = Dictionary.Factory.forWordLength(3)
         val puzzle = Puzzle(dictionary["cat"]!!, dictionary["cot"]!!)
-        val solver = Solver(puzzle, options)
-        val solutions = solver.solve()
+        val solver = Solver(puzzle)
+        val solutions = solver.solve(2)
         assertEquals(1, solutions.size)
         assertEquals(0, solver.exploredCount)
     }
 
     @Test
     fun twoLettersDifferenceIsSolvable() {
-        val options = Options(3)
         val dictionary = Dictionary.Factory.forWordLength(3)
         val puzzle = Puzzle(dictionary["cat"]!!, dictionary["bar"]!!)
-        val solver = Solver(puzzle, options)
-        val solutions = solver.solve()
+        val solver = Solver(puzzle)
+        val solutions = solver.solve(3)
         assertEquals(2, solutions.size)
         assertEquals(0, solver.exploredCount)
     }
 
     @Test
-    fun shortCircuitsOnGetMaxLadderLength() {
-        val options = Options()
-        val dictionary = Dictionary.Factory.forWordLength(3)
-        var puzzle = Puzzle(dictionary["cat"]!!, dictionary["bar"]!!)
-        var solver = Solver(puzzle, options)
-        var maximumLadderLength: Int? = solver.calculateMinimumLadderLength()
-        assertNotNull(maximumLadderLength)
-        assertEquals(3, maximumLadderLength)
-
-        puzzle = Puzzle(dictionary["cat"]!!, dictionary["bat"]!!)
-        solver = Solver(puzzle, options)
-        maximumLadderLength = solver.calculateMinimumLadderLength()
-        assertNotNull(maximumLadderLength)
-        assertEquals(2, maximumLadderLength)
-        puzzle = Puzzle(dictionary["cat"]!!, dictionary["cat"]!!)
-        solver = Solver(puzzle, options)
-        maximumLadderLength = solver.calculateMinimumLadderLength()
-        assertNotNull(maximumLadderLength)
-        assertEquals(1, maximumLadderLength)
-    }
-
-    @Test
     fun everythingUnsolvableWithBadMaxLadderLength() {
-        val options = Options(0)
         val dictionary = Dictionary.Factory.forWordLength(3)
         val puzzle = Puzzle(dictionary["cat"]!!, dictionary["dog"]!!)
-        val solver = Solver(puzzle, options)
-        val solutions = solver.solve()
+        val solver = Solver(puzzle)
+        val solutions = solver.solve(0)
         assertEquals(0, solutions.size)
         assertEquals(0, solver.exploredCount)
     }
 
     @Test
     fun shortCircuitOnOneLetterDifference() {
-        val options = Options(3)
         val dictionary = Dictionary.Factory.forWordLength(3)
         val puzzle = Puzzle(dictionary["cat"]!!, dictionary["cot"]!!)
-        val solver = Solver(puzzle, options)
-        val solutions = solver.solve()
+        val solver = Solver(puzzle)
+        val solutions = solver.solve(3)
         assertEquals(3, solutions.size)
         assertEquals(0, solver.exploredCount)
 

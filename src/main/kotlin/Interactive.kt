@@ -1,4 +1,3 @@
-import solving.Options
 import solving.Solution
 import solving.Solver
 import words.Dictionary
@@ -60,23 +59,20 @@ class Interactive(args: Array<String>) {
 
     private fun solve() {
         println(TOOK + green(tookMs(dictionaryLoadTime!!)) + " to load dictionary")
-        val options = Options()
         val puzzle = Puzzle(dictionary!![startWord!!]!!, dictionary!![finalWord!!]!!)
-        val solver = Solver(puzzle, options)
         if (maximumLadderLength?: -1 == -1) {
             val startTime: Double = System.nanoTime().toDouble()
-            maximumLadderLength = solver.calculateMinimumLadderLength()
+            maximumLadderLength = puzzle.calculateMinimumLadderLength()
             val took: Double = System.nanoTime().minus(startTime)
             if (maximumLadderLength == null) {
                 println(red("Cannot solve '$startWord' to '$finalWord'"))
                 return
             }
             println("$TOOK${green(tookMs(took))} to determine minimum ladder length of ${green(maximumLadderLength!!)}")
-            options.maximumLadderLength = maximumLadderLength!!
         }
-        options.maximumLadderLength = maximumLadderLength!!
+        val solver = Solver(puzzle)
         val startTime: Double = System.nanoTime().toDouble()
-        val solutions = solver.solve()
+        val solutions = solver.solve(maximumLadderLength!!)
         val took: Double = System.nanoTime().minus(startTime)
         if (solutions.isEmpty()) {
             println(red("$TOOK${tookMs(took)} to find no solutions (explored ${FORMAT_COUNT.format(solver.exploredCount)} solutions)"))

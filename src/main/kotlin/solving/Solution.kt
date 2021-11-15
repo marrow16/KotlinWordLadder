@@ -31,7 +31,7 @@ class Solution: Comparable<Solution> {
         if (sizeCompare == 0) {
             var wordCompare = 0
             var w = 0
-            while (w < ladder.size - 1 && wordCompare == 0) {
+            while (w < ladder.size && wordCompare == 0) {
                 wordCompare = ladder[w].toString().compareTo(other.ladder[w].toString())
                 w++
             }
