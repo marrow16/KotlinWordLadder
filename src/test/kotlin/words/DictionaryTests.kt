@@ -63,6 +63,7 @@ class DictionaryTests {
         assertNotNull(word)
         val wordVariants: List<Word> = word!!.linkedWords
         assertFalse(wordVariants.isEmpty())
+        assertEquals(33, wordVariants.size)
         // and check the word itself is not in its list of variants...
         assertFalse(wordVariants.contains(word))
     }
