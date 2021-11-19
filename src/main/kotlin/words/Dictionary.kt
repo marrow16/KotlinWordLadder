@@ -5,7 +5,6 @@ import exceptions.DictionaryLoadErrorException
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
-import java.util.function.Consumer
 
 private const val RESOURCE_NAME_PREFIX = "/dictionary-"
 private const val RESOURCE_NAME_SUFFIX = "-letter-words.txt"
@@ -15,7 +14,7 @@ class Dictionary(private var wordLength: Int) {
 
     init {
         loadWordsFromResources()
-        buildWordVariations()
+        buildWordLinkages()
     }
 
     private fun addWord(word: String) {
@@ -30,23 +29,19 @@ class Dictionary(private var wordLength: Int) {
         }
     }
 
-    private fun buildWordVariations() {
+    private fun buildWordLinkages() {
         val variations: MutableMap<String, MutableList<Word>> = HashMap()
-        words.values
-            .forEach(Consumer { word: Word ->
-                word.variationPatterns
-                    .forEach { variationPattern ->
-                        variations.computeIfAbsent(
-                            variationPattern
-                        ) { s: String? -> ArrayList() }
-                            .add(word)
-                    }
-            })
-        variations.values
-            .forEach(Consumer<List<Word>> { wordVariants: List<Word> ->
-                wordVariants.forEach(
-                    Consumer { word: Word -> word.addLinkedWords(wordVariants) })
-            })
+        words.values.forEach {
+            val word = it
+            word.variationPatterns.forEach {
+                val links = variations.computeIfAbsent(it) { ArrayList() }
+                links.forEach {
+                    it.linked.add(word)
+                    word.linked.add(it)
+                }
+                links.add(word)
+            }
+        }
     }
 
     private fun loadWordsFromResources() {

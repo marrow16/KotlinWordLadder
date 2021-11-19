@@ -59,10 +59,9 @@ class Solver(private val puzzle: Puzzle) {
             endWord = puzzle.startWord
         }
         endDistances = WordDistanceMap(endWord)
-        endDistances.setMaximumLadderLength(maximumLadderLength)
         beginWord.linkedWords
             .parallelStream()
-            .filter{ linkedWord -> endDistances.reachable(linkedWord)}
+            .filter{ linkedWord -> endDistances.reachable(linkedWord, maximumLadderLength)}
             .map { linkedWord -> CandidateSolution(this, beginWord, linkedWord) }
             .forEach(this::solve)
         return solutions
@@ -76,7 +75,7 @@ class Solver(private val puzzle: Puzzle) {
             lastWord.linkedWords
                 .parallelStream()
                 .filter { linkedWord -> !candidate.seenWords.contains(linkedWord) }
-                .filter { linkedWord -> endDistances.reachable(linkedWord, candidate.ladder.size) }
+                .filter { linkedWord -> endDistances.reachable(linkedWord, maximumLadderLength, candidate.ladder.size) }
                 .map { linkedWord -> CandidateSolution(candidate, linkedWord) }
                 .forEach(this::solve)
         }

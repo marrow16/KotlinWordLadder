@@ -8,7 +8,7 @@ class Word(actualWord: String) {
     private val actualWord = actualWord.uppercase()
     private val wordChars = this.actualWord.toCharArray()
     private val hash = this.actualWord.hashCode()
-    private val linked: MutableList<Word> = ArrayList()
+    internal val linked: MutableList<Word> = ArrayList()
 
     init {
         if (wordChars.contains(VARIATION_CHAR)) {
@@ -20,12 +20,6 @@ class Word(actualWord: String) {
         val chars = wordChars.clone()
         chars[i] = VARIATION_CHAR
         String(chars)
-    }
-
-    fun addLinkedWords(variants: List<Word>) {
-        variants.forEach { word -> if (word != this) {
-            linked.add(word)
-        }}
     }
 
     val length: Int get() = actualWord.length

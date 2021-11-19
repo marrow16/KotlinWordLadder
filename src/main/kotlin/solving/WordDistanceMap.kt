@@ -4,8 +4,7 @@ import words.Word
 import java.util.*
 
 class WordDistanceMap(word: Word) {
-    private val distances: MutableMap<Word, Int> = HashMap<Word, Int>()
-    private var maximumLadderLength = 0
+    internal val distances: MutableMap<Word, Int> = HashMap<Word, Int>()
 
     init {
         distances[word] = 1
@@ -13,34 +12,23 @@ class WordDistanceMap(word: Word) {
         queue.add(word)
         while (!queue.isEmpty()) {
             val nextWord: Word = queue.remove()
+            val distance = distances.getOrDefault(nextWord, 0) + 1
             nextWord.linkedWords.stream()
                 .filter { linkedWord -> !distances.containsKey(linkedWord) }
                 .forEach { linkedWord ->
                     queue.add(linkedWord)
-                    distances.computeIfAbsent(linkedWord) { w: Word? ->
-                        1 + distances[nextWord]!!
-                    }
+                    distances.computeIfAbsent(linkedWord) { distance }
                 }
         }
     }
 
     operator fun get(toWord: Word): Int? = distances[toWord]
 
-    internal fun setMaximumLadderLength(maximumLadderLength: Int) {
-        this.maximumLadderLength = maximumLadderLength
+    internal fun reachable(word: Word, maximumLadderLength: Int): Boolean {
+        return (distances[word]?.compareTo(maximumLadderLength) ?: 1) < 1
     }
 
-    internal fun reachable(word: Word): Boolean {
-        val distance = distances.getOrDefault(word, -1)
-        return (distance != -1
-                && distance <= maximumLadderLength)
+    internal fun reachable(word: Word, maximumLadderLength: Int, currentLadderLength: Int): Boolean {
+        return (distances[word]?.compareTo(maximumLadderLength - currentLadderLength) ?: 1) < 1
     }
-
-    internal fun reachable(word: Word, existingSize: Int): Boolean {
-        val distance = distances.getOrDefault(word, -1)
-        return (distance != -1
-                && distance + existingSize <= maximumLadderLength)
-    }
-
-
 }
