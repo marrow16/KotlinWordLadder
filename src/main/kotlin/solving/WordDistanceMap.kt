@@ -3,22 +3,25 @@ package solving
 import words.Word
 import java.util.*
 
-class WordDistanceMap(word: Word) {
+class WordDistanceMap(word: Word, maximumLadderLength: Int?) {
     internal val distances: MutableMap<Word, Int> = HashMap<Word, Int>()
 
     init {
+        var maxDistance = maximumLadderLength?: Int.MAX_VALUE
         distances[word] = 1
         val queue: Queue<Word> = ArrayDeque()
         queue.add(word)
         while (!queue.isEmpty()) {
             val nextWord: Word = queue.remove()
             val distance = distances.getOrDefault(nextWord, 0) + 1
-            nextWord.linkedWords.stream()
-                .filter { linkedWord -> !distances.containsKey(linkedWord) }
-                .forEach { linkedWord ->
-                    queue.add(linkedWord)
-                    distances.computeIfAbsent(linkedWord) { distance }
-                }
+            if (distance <= maxDistance) {
+                nextWord.linkedWords.stream()
+                    .filter { linkedWord -> !distances.containsKey(linkedWord) }
+                    .forEach { linkedWord ->
+                        queue.add(linkedWord)
+                        distances.computeIfAbsent(linkedWord) { distance }
+                    }
+            }
         }
     }
 

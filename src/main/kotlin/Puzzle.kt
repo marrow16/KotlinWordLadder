@@ -38,7 +38,7 @@ class Puzzle(startWord: Word, finalWord: Word) {
             end = startWord
             start = finalWord
         }
-        return WordDistanceMap(start)[end]
+        return WordDistanceMap(start, null)[end]
     }
 
     fun isSolvable(): Boolean = calculateMinimumLadderLength() != null
