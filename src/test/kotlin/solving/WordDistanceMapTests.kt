@@ -6,12 +6,11 @@ import org.junit.jupiter.api.Test
 import words.Dictionary
 import words.Word
 import kotlin.test.assertEquals
-import kotlin.test.assertFails
 
 class WordDistanceMapTests {
     @Test
     fun islandWordHasLimitedMap() {
-        val dictionary = Dictionary.Factory.forWordLength(3)
+        val dictionary = Dictionary.Cache.forWordLength(3)
         val word: Word = dictionary["iwi"]!!
         val wordDistanceMap = WordDistanceMap(word)
 
@@ -21,7 +20,7 @@ class WordDistanceMapTests {
 
     @Test
     fun catMap() {
-        val dictionary = Dictionary.Factory.forWordLength(3)
+        val dictionary = Dictionary.Cache.forWordLength(3)
         val word: Word = dictionary["cat"]!!
         val wordDistanceMap = WordDistanceMap(word)
 

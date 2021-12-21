@@ -12,7 +12,7 @@ class SolutionTests {
 
     @BeforeEach
     fun before() {
-        dictionary = Dictionary.Factory.forWordLength(3)
+        dictionary = Dictionary.Cache.forWordLength(3)
     }
 
     @Test

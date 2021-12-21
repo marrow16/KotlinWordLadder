@@ -13,44 +13,29 @@ class Dictionary(private var wordLength: Int) {
     val words: MutableMap<String, Word> = HashMap()
 
     init {
-        loadWordsFromResources()
-        buildWordLinkages()
+        loadWordsFromResources(WordLinkageBuilder())
     }
 
-    private fun addWord(word: String) {
-        if (word.isNotEmpty()) {
-            if (word.length != wordLength) {
+    private fun addWord(addWord: String, linkageBuilder: WordLinkageBuilder) {
+        if (addWord.isNotEmpty()) {
+            if (addWord.length != wordLength) {
                 throw BadWordException(
-                    "Word '$word' (length = ${word.length}) cannot be loaded into $wordLength letter word dictionary"
+                    "Word '$addWord' (length = ${addWord.length}) cannot be loaded into $wordLength letter word dictionary"
                 )
             }
-            val upperWord = word.uppercase()
-            words[upperWord] = Word(upperWord)
+            val word = Word(addWord)
+            words[word.actualWord] = word
+            linkageBuilder.link(word)
         }
     }
 
-    private fun buildWordLinkages() {
-        val variations: MutableMap<String, MutableList<Word>> = HashMap()
-        words.values.forEach {
-            val word = it
-            word.variationPatterns.forEach {
-                val links = variations.computeIfAbsent(it) { ArrayList() }
-                links.forEach {
-                    it.linked.add(word)
-                    word.linked.add(it)
-                }
-                links.add(word)
-            }
-        }
-    }
-
-    private fun loadWordsFromResources() {
+    private fun loadWordsFromResources(linkageBuilder: WordLinkageBuilder) {
         try {
             this::class.java.getResourceAsStream("$RESOURCE_NAME_PREFIX$wordLength$RESOURCE_NAME_SUFFIX").use { inputStream: InputStream? ->
                 BufferedReader(InputStreamReader(inputStream!!)).use { br: BufferedReader ->
                     var line: String?
                     while (br.readLine().also { line = it } != null) {
-                        this.addWord(line?:"")
+                        this.addWord(line?:"", linkageBuilder)
                     }
                 }
             }
@@ -69,7 +54,29 @@ class Dictionary(private var wordLength: Int) {
 
     operator fun contains(word: String): Boolean = words.containsKey(word.uppercase())
 
-    object Factory {
+    private class WordLinkageBuilder {
+        private val variations: MutableMap<String, MutableList<Word>> = HashMap()
+
+        fun link(word: Word) {
+            word.variationPatterns.forEach { variation ->
+                val links = variations.computeIfAbsent(variation) { ArrayList() }
+                links.forEach { linkedWord ->
+                    // add the new word as linked to the existing words...
+                    linkedWord.linked.add(word)
+                    // add the existing word as linked to the new word...
+                    word.linked.add(linkedWord)
+                }
+                // add the new word to the list of words of this pattern...
+                links.add(word)
+            }
+        }
+    }
+
+    /**
+     * Dictionary.Cache is a cache of loaded dictionaries
+     * (use the Dictionary constructor directly if you don't want to hold onto loaded dictionaries)
+     */
+    object Cache {
         private val CACHE: MutableMap<Int, Dictionary> = HashMap()
 
         fun fromWord(word: String): Dictionary =
