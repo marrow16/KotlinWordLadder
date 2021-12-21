@@ -58,7 +58,7 @@ class Solver(private val puzzle: Puzzle) {
             beginWord = puzzle.finalWord
             endWord = puzzle.startWord
         }
-        endDistances = WordDistanceMap(endWord)
+        endDistances = WordDistanceMap(endWord, maximumLadderLength - 1)
         beginWord.linkedWords
             .parallelStream()
             .filter{ linkedWord -> endDistances.reachable(linkedWord, maximumLadderLength)}
