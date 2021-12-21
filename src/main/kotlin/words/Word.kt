@@ -5,7 +5,7 @@ import exceptions.BadWordException
 private const val VARIATION_CHAR = '_'
 
 class Word(actualWord: String) {
-    private val actualWord = actualWord.uppercase()
+    internal val actualWord = actualWord.uppercase()
     private val wordChars = this.actualWord.toCharArray()
     private val hash = this.actualWord.hashCode()
     internal val linked: MutableList<Word> = ArrayList()
@@ -28,7 +28,10 @@ class Word(actualWord: String) {
 
     val linkedWords: List<Word> get() = this.linked
 
-    fun differences(other: Word): Int {
+    /**
+     * Subtracting one word from another calcs differences
+     */
+    operator fun minus(other: Word): Int {
         var result = 0
         for (ch in wordChars.indices) {
             result += if (wordChars[ch] != other.wordChars[ch]) 1 else 0

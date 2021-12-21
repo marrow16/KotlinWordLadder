@@ -18,7 +18,7 @@ private fun solve(args: Array<String>) {
             throw Exception("Words supplied as args must be same length")
         }
         val loadStartTime = System.nanoTime()
-        val dictionary = Dictionary.Factory.fromWord(first)
+        val dictionary = Dictionary.Cache.fromWord(first)
         val loadEndTime = System.nanoTime()
         val startWord = dictionary[first] ?: throw Exception("Word '$first' does not exist in dictionary")
         val endWord = dictionary[second] ?: throw Exception("Word '$second' does not exist in dictionary")

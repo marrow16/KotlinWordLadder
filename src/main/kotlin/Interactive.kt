@@ -146,7 +146,7 @@ class Interactive(args: Array<String>) {
 
     private fun loadDictionary(word: String): Boolean {
         val startTime:Double = System.nanoTime().toDouble()
-        dictionary = try { Dictionary.Factory.fromWord(word) }
+        dictionary = try { Dictionary.Cache.fromWord(word) }
             catch (e: Exception) { null }
         if (dictionary == null) {
             println(red("              Failed to load dictionary!"))

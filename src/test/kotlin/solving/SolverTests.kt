@@ -5,13 +5,11 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import words.Dictionary
 import java.util.*
-import kotlin.test.assertNotNull
-import kotlin.test.assertNull
 
 class SolverTests {
     @Test
     fun solveCatToDog() {
-        val dictionary = Dictionary.Factory.forWordLength(3)
+        val dictionary = Dictionary.Cache.forWordLength(3)
         val puzzle = Puzzle(dictionary["cat"]!!, dictionary["dog"]!!)
         val solver = Solver(puzzle)
         val solutions: List<Solution> = solver.solve(4)
@@ -39,7 +37,7 @@ class SolverTests {
 
     @Test
     fun solveColdToWarmAndWarmToCold() {
-        val dictionary = Dictionary.Factory.forWordLength(4)
+        val dictionary = Dictionary.Cache.forWordLength(4)
         var puzzle = Puzzle(dictionary["cold"]!!, dictionary["warm"]!!)
         var solver = Solver(puzzle)
         var solutions = solver.solve(5)
@@ -56,7 +54,7 @@ class SolverTests {
 
     @Test
     fun solveKataToJava() {
-        val dictionary = Dictionary.Factory.forWordLength(4)
+        val dictionary = Dictionary.Cache.forWordLength(4)
         val puzzle = Puzzle(dictionary["kata"]!!, dictionary["java"]!!)
         val solver = Solver(puzzle)
         val solutions = solver.solve(3)
@@ -69,7 +67,7 @@ class SolverTests {
 
     @Test
     fun sameWordIsSolvable() {
-        val dictionary = Dictionary.Factory.forWordLength(3)
+        val dictionary = Dictionary.Cache.forWordLength(3)
         val puzzle = Puzzle(dictionary["cat"]!!, dictionary["cat"]!!)
         val solver = Solver(puzzle)
         val solutions = solver.solve(1)
@@ -79,7 +77,7 @@ class SolverTests {
 
     @Test
     fun oneLetterDifferenceIsSolvable() {
-        val dictionary = Dictionary.Factory.forWordLength(3)
+        val dictionary = Dictionary.Cache.forWordLength(3)
         val puzzle = Puzzle(dictionary["cat"]!!, dictionary["cot"]!!)
         val solver = Solver(puzzle)
         val solutions = solver.solve(2)
@@ -89,7 +87,7 @@ class SolverTests {
 
     @Test
     fun twoLettersDifferenceIsSolvable() {
-        val dictionary = Dictionary.Factory.forWordLength(3)
+        val dictionary = Dictionary.Cache.forWordLength(3)
         val puzzle = Puzzle(dictionary["cat"]!!, dictionary["bar"]!!)
         val solver = Solver(puzzle)
         val solutions = solver.solve(3)
@@ -99,7 +97,7 @@ class SolverTests {
 
     @Test
     fun everythingUnsolvableWithBadMaxLadderLength() {
-        val dictionary = Dictionary.Factory.forWordLength(3)
+        val dictionary = Dictionary.Cache.forWordLength(3)
         val puzzle = Puzzle(dictionary["cat"]!!, dictionary["dog"]!!)
         val solver = Solver(puzzle)
         val solutions = solver.solve(0)
@@ -109,7 +107,7 @@ class SolverTests {
 
     @Test
     fun shortCircuitOnOneLetterDifference() {
-        val dictionary = Dictionary.Factory.forWordLength(3)
+        val dictionary = Dictionary.Cache.forWordLength(3)
         val puzzle = Puzzle(dictionary["cat"]!!, dictionary["cot"]!!)
         val solver = Solver(puzzle)
         val solutions = solver.solve(3)

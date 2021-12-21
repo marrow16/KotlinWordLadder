@@ -50,7 +50,7 @@ class DictionaryTests {
     @Test
     fun canLoadDictionariesFromFactory() {
         for (wordLength in VALID_DICTIONARY_LENGTHS) {
-            val dictionary = Dictionary.Factory.forWordLength(wordLength)
+            val dictionary = Dictionary.Cache.forWordLength(wordLength)
             assertNotNull(dictionary)
             assertFalse(dictionary.isEmpty())
         }
@@ -58,7 +58,7 @@ class DictionaryTests {
 
     @Test
     fun dictionaryWordHasVariants() {
-        val dictionary = Dictionary.Factory.forWordLength(3)
+        val dictionary = Dictionary.Cache.forWordLength(3)
         val word: Word? = dictionary["cat"]
         assertNotNull(word)
         val wordVariants: List<Word> = word!!.linkedWords
@@ -70,7 +70,7 @@ class DictionaryTests {
 
     @Test
     fun dictionaryWordIsIslandWord() {
-        val dictionary = Dictionary.Factory.forWordLength(3)
+        val dictionary = Dictionary.Cache.forWordLength(3)
         val word: Word? = dictionary["IWI"]
         assertNotNull(word)
         val wordVariants: List<Word> = word!!.linkedWords
@@ -80,18 +80,18 @@ class DictionaryTests {
 
     @Test
     fun differencesBetweenLinkedWords() {
-        val dictionary = Dictionary.Factory.forWordLength(3)
+        val dictionary = Dictionary.Cache.forWordLength(3)
         val word: Word? = dictionary["cat"]
         assertNotNull(word)
         assertFalse(word!!.linkedWords.isEmpty())
         for (linkedWord in word.linkedWords) {
-            assertEquals(1, word.differences(linkedWord))
+            assertEquals(1, word - linkedWord)
         }
     }
 
     @Test
     fun wordsAreInterLinked() {
-        val dictionary = Dictionary.Factory.forWordLength(3)
+        val dictionary = Dictionary.Cache.forWordLength(3)
         val word: Word? = dictionary["cat"]
         assertNotNull(word)
         assertFalse(word!!.linkedWords.isEmpty())

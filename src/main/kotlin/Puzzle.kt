@@ -23,7 +23,7 @@ class Puzzle(startWord: Word, finalWord: Word) {
         var start: Word = startWord
         var end: Word = finalWord
         // check for short-circuits...
-        when (val differences: Int = start.differences(end)) {
+        when (val differences: Int = start - end) {
             0, 1 -> return differences + 1
             2 -> {
                 val startLinkedWords: MutableSet<Word> = HashSet(start.linkedWords)

@@ -1,14 +1,12 @@
-import exceptions.BadWordException
 import exceptions.PuzzleErrorException
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.function.Executable
 import words.Dictionary
 
 class PuzzleTests {
     @Test
     fun minimumLadderForCatToDog() {
-        val dictionary = Dictionary.Factory.forWordLength(3)
+        val dictionary = Dictionary.Cache.forWordLength(3)
         val puzzle = Puzzle(dictionary["cat"]!!, dictionary["dog"]!!)
         val minimumLadderLength: Int? = puzzle.calculateMinimumLadderLength()
         assertNotNull(minimumLadderLength)
@@ -17,7 +15,7 @@ class PuzzleTests {
 
     @Test
     fun minimumLadderForColdToWarm() {
-        val dictionary = Dictionary.Factory.forWordLength(4)
+        val dictionary = Dictionary.Cache.forWordLength(4)
         val puzzle = Puzzle(dictionary["cold"]!!, dictionary["warm"]!!)
         val minimumLadderLength: Int? = puzzle.calculateMinimumLadderLength()
         assertNotNull(minimumLadderLength)
@@ -26,7 +24,7 @@ class PuzzleTests {
 
     @Test
     fun minimumLadderForKataToJava() {
-        val dictionary = Dictionary.Factory.forWordLength(4)
+        val dictionary = Dictionary.Cache.forWordLength(4)
         val puzzle = Puzzle(dictionary["kata"]!!, dictionary["java"]!!)
         val minimumLadderLength: Int? = puzzle.calculateMinimumLadderLength()
         assertNotNull(minimumLadderLength)
@@ -35,7 +33,7 @@ class PuzzleTests {
 
     @Test
     fun cannotSolveLlamaToArtsy() {
-        val dictionary = Dictionary.Factory.forWordLength(5)
+        val dictionary = Dictionary.Cache.forWordLength(5)
         val puzzle = Puzzle(dictionary["llama"]!!, dictionary["artsy"]!!)
         val minimumLadderLength: Int? = puzzle.calculateMinimumLadderLength()
         assertNull(minimumLadderLength)
@@ -46,7 +44,7 @@ class PuzzleTests {
 
     @Test
     fun constructorFailsWithIslandWords() {
-        val dictionary = Dictionary.Factory.forWordLength(3)
+        val dictionary = Dictionary.Cache.forWordLength(3)
         assertThrows(
             PuzzleErrorException::class.java
         ) { Puzzle(dictionary["iwi"]!!, dictionary["cat"]!!) }
@@ -61,8 +59,8 @@ class PuzzleTests {
 
     @Test
     fun constructorFailsWithDifferentLengthWords() {
-        val dictionary2 = Dictionary.Factory.forWordLength(2)
-        val dictionary3 = Dictionary.Factory.forWordLength(3)
+        val dictionary2 = Dictionary.Cache.forWordLength(2)
+        val dictionary3 = Dictionary.Cache.forWordLength(3)
         assertThrows(
             PuzzleErrorException::class.java
         ) { Puzzle(dictionary2["of"]!!, dictionary3["cat"]!!) }

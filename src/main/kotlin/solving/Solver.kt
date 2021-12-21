@@ -27,7 +27,7 @@ class Solver(private val puzzle: Puzzle) {
         endWord = puzzle.finalWord
         reversed = false
         // check for short-circuits...
-        when (beginWord.differences(endWord)) {
+        when (beginWord - endWord) {
             0 -> {
                 // same word - so there's only one solution...
                 solutions.add(Solution(beginWord))
